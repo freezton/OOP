@@ -9,6 +9,5 @@ public class Clothing extends Product {
         super(id, name, price, description);
         this.size = size;
         this.material = material;
-        this.color = color;
     }
 }
