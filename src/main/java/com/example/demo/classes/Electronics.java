@@ -1,12 +1,30 @@
 package com.example.demo.classes;
 
+import com.example.demo.enums.ElectronicsType;
+
 public class Electronics extends Product {
-    ElectronicsType type;
-    String model;
+    private ElectronicsType type;
+    private String model;
 
     public Electronics(int id, String name, double price, String description, ElectronicsType type, String model) {
         super(id, name, price, description);
         this.type = type;
+        this.model = model;
+    }
+
+    public ElectronicsType getType() {
+        return type;
+    }
+
+    public void setType(ElectronicsType type) {
+        this.type = type;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
         this.model = model;
     }
 }

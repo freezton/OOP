@@ -4,6 +4,8 @@ target/
 !**/src/test/**/target/
 
 info.txt
+diagram.uml
+temp/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

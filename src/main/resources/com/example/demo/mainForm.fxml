@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controllers.MainController">
+  <tabs>
+    <Tab closable="false" text="Products">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="300.0" layoutY="304.0" mnemonicParsing="false" onAction="#onAddProductButtonClick" text="Add" />
+                  <Button fx:id="deleteProductButton" disable="true" layoutX="416.0" layoutY="304.0" mnemonicParsing="false" onAction="#onDeleteProductButtonClick" text="Delete" />
+                  <Button fx:id="editProductButton" disable="true" layoutX="354.0" layoutY="304.0" mnemonicParsing="false" onAction="#onEditProductButtonClick" text="Edit" />
+                  <TableView fx:id="productsTableView" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="280.0">
+                    <columns>
+                      <TableColumn fx:id="idColumn" prefWidth="40.0" text="Id" />
+                      <TableColumn fx:id="nameColumn" prefWidth="119.0" text="Name" />
+                        <TableColumn fx:id="priceColumn" prefWidth="119.0" text="Price" />
+                    </columns>
+                  </TableView>
+                  <ComboBox fx:id="classesComboBox" layoutX="130.0" layoutY="304.0" prefWidth="150.0" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab closable="false" text="Reviews">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TableView fx:id="reviewTableView" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="569.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="C1" />
+                      <TableColumn prefWidth="75.0" text="C2" />
+                    </columns>
+                  </TableView>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>

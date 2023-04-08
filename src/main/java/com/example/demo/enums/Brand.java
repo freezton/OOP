@@ -1,4 +1,4 @@
-package com.example.demo.classes;
+package com.example.demo.enums;
 
 public enum Brand {
     APPLE,
