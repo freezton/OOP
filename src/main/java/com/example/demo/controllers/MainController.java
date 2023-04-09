@@ -67,6 +67,16 @@ public class MainController implements Initializable {
         return false;
     }
 
+    public static boolean isIdAvailable(int newId, int currentId) {
+        if (currentId == newId)
+            return true;
+        for (Product product: items) {
+            if (product.getId() == newId)
+                return false;
+        }
+        return true;
+    }
+
     private void initClassesComboBox() {
         ObservableList<ProductClass> classes = FXCollections.observableArrayList(
                 new ProductClass(Book.class, "Book"),
@@ -81,6 +91,7 @@ public class MainController implements Initializable {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+
         items = FXCollections.observableArrayList (
                 new Book(1, "Book 1", 16.2, "Just a book", "Author 1", "chel", Genre.FICTION),
                 new Book(25, "Book 2", 16.2, "Just a book2", "Author 2", "chel", Genre.DRAMA),
@@ -96,6 +107,7 @@ public class MainController implements Initializable {
                 new Electronics(183, "Electronics 1", 5.4, "Desc", ElectronicsType.CAMERA, "Y60")
         );
         items.addListener((ListChangeListener<Product>) change -> addReviewButton.setDisable(items.isEmpty()));
+
         productsTableView.setItems(items);
         productsTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

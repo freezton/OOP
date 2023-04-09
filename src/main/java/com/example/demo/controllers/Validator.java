@@ -8,6 +8,10 @@ public final class Validator {
         return isValidInteger(inputString) && !MainController.isIdExists(Integer.parseInt(inputString));
     }
 
+    public static boolean isValidNewId(String inputString, int currentId) {
+        return isValidInteger(inputString) && MainController.isIdAvailable(Integer.parseInt(inputString), currentId);
+    }
+
     public static boolean isValidRate(String inputString) {
         return isValidInteger(inputString) && Integer.parseInt(inputString) <= 5 && Integer.parseInt(inputString) >= 0;
     }

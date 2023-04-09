@@ -17,18 +17,24 @@ abstract public class AbstractProductController {
     protected TextField nameField;
     @FXML
     protected TextField priceField;
-
     @FXML
     protected Button cancelButton;
+    protected boolean isNewObject = true;
+    int currentId;
 
     @FXML
     abstract void onConfirmButtonClick(ActionEvent event);
 
     protected boolean isCorrectForm() {
-        return Validator.isValidInteger(idField.getText()) && Validator.isValidPrice(priceField.getText());
+        if (isNewObject)
+            return Validator.isValidId(idField.getText()) && Validator.isValidPrice(priceField.getText());
+        else
+            return Validator.isValidNewId(idField.getText(), currentId) && Validator.isValidPrice(priceField.getText());
     }
 
     protected void setCommonProperties(Product product) {
+        isNewObject = false;
+        currentId = product.getId();
         idField.setText(String.valueOf(product.getId()));
         nameField.setText(product.getName());
         priceField.setText(String.valueOf(product.getPrice()));
