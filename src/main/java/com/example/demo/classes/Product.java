@@ -15,8 +15,12 @@ abstract public class Product {
 
     @Override
     public String toString() {
-        return id + ". " + name;
+        return  "id=" + id + "\n" +
+                "  name: '" + name + "\'\n" +
+                "  price: " + price + "\n" +
+                "  description: '" + description + "\'\n";
     }
+
 
     public int getId() {
         return id;

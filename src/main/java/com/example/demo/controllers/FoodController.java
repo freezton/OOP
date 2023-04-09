@@ -18,9 +18,10 @@ public class FoodController extends AbstractProductController {
     @Override
     void onConfirmButtonClick(ActionEvent event) {
         if (isCorrectForm()) {
+            if (descriptionField.getText().isBlank())
+                descriptionField.setText("None");
             if (food == null) {
-                if (descriptionField.getText().isBlank())
-                    descriptionField.setText("None");
+
                 food = new Food(
                         Integer.parseInt(idField.getText()),
                         nameField.getText(),
@@ -46,6 +47,7 @@ public class FoodController extends AbstractProductController {
         setCommonProperties(food);
         expirationDateField.setText(String.valueOf(food.getExpirationDate()));
         caloriesField.setText(String.valueOf(food.getCalories()));
+        this.food = food;
     }
 
     public Food getFood() {

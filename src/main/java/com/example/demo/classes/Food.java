@@ -25,4 +25,11 @@ public class Food extends Product {
     public void setCalories(int calories) {
         this.calories = calories;
     }
+
+    @Override
+    public String toString() {
+        return "Food" + "\n" + super.toString() +
+                "  calories: " + calories + "\n" +
+                "  expiration date: " + expirationDate;
+    }
 }

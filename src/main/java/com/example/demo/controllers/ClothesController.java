@@ -34,9 +34,9 @@ public class ClothesController extends AbstractProductController {
     @Override
     void onConfirmButtonClick(ActionEvent event) {
         if (isCorrectForm()) {
+            if (descriptionField.getText().isBlank())
+                descriptionField.setText("None");
             if (clothes == null) {
-                if (descriptionField.getText().isBlank())
-                    descriptionField.setText("None");
                 clothes = new Clothes(
                         Integer.parseInt(idField.getText()),
                         nameField.getText(),
@@ -72,6 +72,7 @@ public class ClothesController extends AbstractProductController {
         sizeField.setText(String.valueOf(clothes.getSize()));
         typeField.setValue(clothes.getType());
         materialField.setValue(clothes.getMaterial());
+        this.clothes = clothes;
     }
 
     public Clothes getClothes() {

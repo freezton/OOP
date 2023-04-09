@@ -22,7 +22,7 @@ public class ElectronicsFactory implements AbstractProductFactory{
 
     @Override
     public void edit(Product electronics, String fxmlFilename, String formTitle) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFilename));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcesRoot + fxmlFilename));
         Stage stage = new Stage();
         Object controller = ControllerManager.getController(formTitle, loader, stage);
         ((ElectronicsController)controller).setElectronicsProperties((Electronics)electronics);

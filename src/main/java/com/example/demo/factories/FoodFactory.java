@@ -22,7 +22,7 @@ public class FoodFactory implements AbstractProductFactory {
 
     @Override
     public void edit(Product food, String fxmlFilename, String formTitle) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFilename));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcesRoot + fxmlFilename));
         Stage stage = new Stage();
         Object controller = ControllerManager.getController(formTitle, loader, stage);
         ((FoodController)controller).setFoodProperties((Food)food);

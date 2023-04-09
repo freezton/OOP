@@ -21,7 +21,7 @@ public class BookFactory implements AbstractProductFactory {
 
     @Override
     public void edit(Product book, String fxmlFilename, String formTitle) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFilename));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcesRoot + fxmlFilename));
         Stage stage = new Stage();
         Object controller = ControllerManager.getController(formTitle, loader, stage);
         ((BookController)controller).setBookProperties((Book)book);

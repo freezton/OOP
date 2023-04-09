@@ -33,9 +33,9 @@ public class BookController extends AbstractProductController {
     @Override
     void onConfirmButtonClick(ActionEvent event) {
         if (isCorrectForm()) {
+            if (descriptionField.getText().isBlank())
+                descriptionField.setText("None");
             if (book == null) {
-                if (descriptionField.getText().isBlank())
-                    descriptionField.setText("None");
                 book = new Book(
                         Integer.parseInt(idField.getText()),
                         nameField.getText(),
@@ -66,6 +66,7 @@ public class BookController extends AbstractProductController {
         authorField.setText(book.getAuthor());
         publisherField.setText(book.getPublisher());
         genreField.setValue(book.getGenre());
+        this.book = book;
     }
 
     public Book getBook() {

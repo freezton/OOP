@@ -36,7 +36,7 @@ abstract public class AbstractProductController {
     }
 
     @FXML
-    void onCancelButtonClick(ActionEvent event) {
+    void onCancelButtonClick() {
         Stage stage = (Stage)cancelButton.getScene().getWindow();
         stage.close();
     }

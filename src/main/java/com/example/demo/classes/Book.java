@@ -9,7 +9,10 @@ public class Book extends Product {
 
     @Override
     public String toString() {
-        return super.toString() + ". " + author + ". " + publisher + ". " + genre.toString();
+        return "Book" + "\n" + super.toString() +
+                "  author: '" + author + "\'\n" +
+                "  publisher: '" + publisher + "\'\n" +
+                "  genre: " + genre ;
     }
 
     public void setAuthor(String author) {

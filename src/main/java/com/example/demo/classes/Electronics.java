@@ -27,4 +27,11 @@ public class Electronics extends Product {
     public void setModel(String model) {
         this.model = model;
     }
+
+    @Override
+    public String toString() {
+        return "Electronics" + "\n" + super.toString() +
+                "  type: '" + type + "\'\n" +
+                "  model: '" + model + "'";
+    }
 }

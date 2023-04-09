@@ -28,9 +28,10 @@ public class ElectronicsController extends AbstractProductController {
     @Override
     void onConfirmButtonClick(ActionEvent event) {
         if (isCorrectForm()) {
+            if (descriptionField.getText().isBlank())
+                descriptionField.setText("None");
             if (electronics == null) {
-                if (descriptionField.getText().isBlank())
-                    descriptionField.setText("None");
+
                 electronics = new Electronics(
                         Integer.parseInt(idField.getText()),
                         nameField.getText(),
@@ -58,6 +59,7 @@ public class ElectronicsController extends AbstractProductController {
         setCommonProperties(electronics);
         typeField.setValue(electronics.getType());
         modelField.setText(electronics.getModel());
+        this.electronics = electronics;
     }
 
     public Electronics getElectronics() {

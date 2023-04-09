@@ -4,7 +4,7 @@ import com.example.demo.classes.Product;
 
 public interface AbstractProductFactory {
 
-    public final String resourcesRoot = "/com/example/demo/";
+    String resourcesRoot = "/com/example/demo/";
     Product create(String fxmlFilename, String formTitle);
 
     void edit(Product product, String fxmlFilename, String formTitle);
