@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import com.example.demo.classes.Product;
 import com.example.demo.classes.Review;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -74,7 +73,7 @@ public class ReviewController implements Initializable {
             Stage stage = (Stage)cancelButton.getScene().getWindow();
             stage.close();
         } else {
-            // show error window
+            Validator.showErrorWindow();
         }
     }
 

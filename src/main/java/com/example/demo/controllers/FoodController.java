@@ -1,6 +1,5 @@
 package com.example.demo.controllers;
 
-import com.example.demo.classes.Book;
 import com.example.demo.classes.Food;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +20,6 @@ public class FoodController extends AbstractProductController {
             if (descriptionField.getText().isBlank())
                 descriptionField.setText("None");
             if (food == null) {
-
                 food = new Food(
                         Integer.parseInt(idField.getText()),
                         nameField.getText(),
@@ -40,6 +38,8 @@ public class FoodController extends AbstractProductController {
             }
             Stage stage = (Stage)cancelButton.getScene().getWindow();
             stage.close();
+        } else {
+            Validator.showErrorWindow();
         }
     }
 

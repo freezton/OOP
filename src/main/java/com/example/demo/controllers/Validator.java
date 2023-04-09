@@ -1,19 +1,15 @@
 package com.example.demo.controllers;
 
+import javafx.scene.control.Alert;
+
 public final class Validator {
 
     public static boolean isValidId(String inputString) {
-        if (isValidInteger(inputString) && !MainController.isIdExists(Integer.parseInt(inputString))) {
-            return true;
-        }
-        return false;
+        return isValidInteger(inputString) && !MainController.isIdExists(Integer.parseInt(inputString));
     }
 
     public static boolean isValidRate(String inputString) {
-        if (isValidInteger(inputString) && Integer.parseInt(inputString) <= 5 && Integer.parseInt(inputString) >= 1) {
-            return true;
-        }
-        return false;
+        return isValidInteger(inputString) && Integer.parseInt(inputString) <= 5 && Integer.parseInt(inputString) >= 0;
     }
 
     public static boolean isValidInteger(String inputString) {
@@ -23,6 +19,14 @@ public final class Validator {
             return false;
         }
         return true;
+    }
+
+    public static void showErrorWindow() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка");
+        alert.setHeaderText("Некорректно введены данные");
+        alert.setContentText("Попробуйте еще раз");
+        alert.showAndWait();
     }
 
     public static boolean isValidDouble(String inputString) {
@@ -35,6 +39,6 @@ public final class Validator {
     }
 
     public static boolean isValidPrice(String inputString) {
-        return inputString.matches("[0-9]+(\\.[0-9]{0,2})?");
+        return isValidDouble(inputString) && inputString.matches("[0-9]+(\\.[0-9]{0,2})?");
     }
 }

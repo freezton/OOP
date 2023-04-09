@@ -57,7 +57,7 @@ public class BookController extends AbstractProductController {
             Stage stage = (Stage)cancelButton.getScene().getWindow();
             stage.close();
         } else {
-            //show error form
+            Validator.showErrorWindow();
         }
     }
 

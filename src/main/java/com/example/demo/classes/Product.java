@@ -15,10 +15,10 @@ abstract public class Product {
 
     @Override
     public String toString() {
-        return  "id=" + id + "\n" +
-                "  name: '" + name + "\'\n" +
+        return  "id: " + id + "\n" +
+                "  name: '" + name + "'\n" +
                 "  price: " + price + "\n" +
-                "  description: '" + description + "\'\n";
+                "  description: '" + description + "'\n";
     }
 
 

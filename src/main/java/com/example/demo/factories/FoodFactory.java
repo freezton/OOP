@@ -1,9 +1,7 @@
 package com.example.demo.factories;
 
-import com.example.demo.classes.Book;
 import com.example.demo.classes.Food;
 import com.example.demo.classes.Product;
-import com.example.demo.controllers.BookController;
 import com.example.demo.controllers.ControllerManager;
 import com.example.demo.controllers.FoodController;
 import javafx.fxml.FXMLLoader;

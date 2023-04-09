@@ -51,7 +51,7 @@ public class ElectronicsController extends AbstractProductController {
             Stage stage = (Stage)cancelButton.getScene().getWindow();
             stage.close();
         } else {
-            // show error message
+            Validator.showErrorWindow();
         }
     }
 

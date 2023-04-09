@@ -1,9 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.classes.Book;
 import com.example.demo.classes.Clothes;
 import com.example.demo.enums.ClothesType;
-import com.example.demo.enums.Genre;
 import com.example.demo.enums.Material;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,7 +56,7 @@ public class ClothesController extends AbstractProductController {
             Stage stage = (Stage)cancelButton.getScene().getWindow();
             stage.close();
         } else {
-            //show error form
+            Validator.showErrorWindow();
         }
     }
 

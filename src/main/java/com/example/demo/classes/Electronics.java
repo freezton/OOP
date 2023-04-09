@@ -31,7 +31,7 @@ public class Electronics extends Product {
     @Override
     public String toString() {
         return "Electronics" + "\n" + super.toString() +
-                "  type: '" + type + "\'\n" +
+                "  type: '" + type + "'\n" +
                 "  model: '" + model + "'";
     }
 }
