@@ -6,7 +6,7 @@ public enum ElectronicsType {
     TABLET,
     SMARTPHONE,
     SMARTWATCH,
-    TELEVISION,
+    TV,
     SPEAKERS,
     HEADPHONES,
     EARPHONES,

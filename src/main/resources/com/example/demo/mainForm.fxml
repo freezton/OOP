@@ -42,11 +42,11 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="581.0">
                <children>
-                  <TableView fx:id="reviewsTableView" layoutX="14.0" layoutY="14.0" prefHeight="309.0" prefWidth="569.0">
+                  <TableView fx:id="reviewsTableView" layoutX="14.0" layoutY="14.0" prefHeight="309.0" prefWidth="318.0">
                     <columns>
-                      <TableColumn fx:id="productReviewColumn" prefWidth="122.0" text="Product" />
-                      <TableColumn fx:id="ratingReviewColumn" prefWidth="63.0" text="Rating" />
-                        <TableColumn fx:id="commentReviewColumn" maxWidth="383.0" prefWidth="383.0" text="Comment" />
+                      <TableColumn fx:id="productReviewColumn" prefWidth="131.0" text="Product" />
+                      <TableColumn fx:id="ratingReviewColumn" prefWidth="165.0" text="Rating" />
+                        <TableColumn fx:id="commentReviewColumn" maxWidth="383.0" minWidth="3.0" prefWidth="3.0" text="Comment" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -55,6 +55,11 @@
                   <Button fx:id="addReviewButton" disable="true" layoutX="14.0" layoutY="335.0" mnemonicParsing="false" onAction="#onAddReviewButtonClick" prefHeight="25.0" prefWidth="169.0" text="Add" />
                   <Button fx:id="editReviewButton" disable="true" layoutX="199.0" layoutY="335.0" mnemonicParsing="false" onAction="#onEditReviewButtonClick" prefHeight="25.0" prefWidth="187.0" text="Edit" />
                   <Button fx:id="deleteReviewButton" disable="true" layoutX="399.0" layoutY="335.0" mnemonicParsing="false" onAction="#onDeleteReviewButtonClick" prefHeight="25.0" prefWidth="184.0" text="Delete" />
+                  <TextArea fx:id="reviewTextArea" layoutX="341.0" layoutY="14.0" prefHeight="309.0" prefWidth="250.0" text="No review selected" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextArea>
                </children></AnchorPane>
       </content>
     </Tab>

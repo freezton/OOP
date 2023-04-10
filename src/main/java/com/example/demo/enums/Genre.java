@@ -8,6 +8,7 @@ public enum Genre {
     ROMANCE,
     HORROR,
     SCIENCE_FICTION,
+    DYSTOPIA,
     FANTASY,
     BIOGRAPHY,
     AUTOBIOGRAPHY,

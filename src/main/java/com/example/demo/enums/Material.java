@@ -8,7 +8,6 @@ public enum Material {
     LINEN,
     LEATHER,
     DENIM,
-    LACE,
     SUEDE,
     FLEECE
 }
