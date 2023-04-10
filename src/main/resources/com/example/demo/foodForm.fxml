@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="414.0" prefWidth="347.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controllers.FoodController">
+<AnchorPane prefHeight="414.0" prefWidth="347.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controllers.FoodController">
    <children>
-      <Pane layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="319.0" style="-fx-background-color: EAEAEA;">
-         <children>
-            <Label layoutX="69.0" layoutY="1.0" text="Common properties">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <TextField fx:id="idField" layoutX="22.0" layoutY="38.0" prefHeight="30.0" prefWidth="271.0" promptText="Id">
-               <font>
-                  <Font size="14.0" />
-               </font></TextField>
-            <TextField fx:id="nameField" layoutX="22.0" layoutY="78.0" prefHeight="30.0" prefWidth="271.0" promptText="Name">
-               <font>
-                  <Font size="14.0" />
-               </font></TextField>
-            <TextField fx:id="priceField" layoutX="22.0" layoutY="116.0" prefHeight="30.0" prefWidth="271.0" promptText="Price" text="0.00">
-               <font>
-                  <Font size="14.0" />
-               </font></TextField>
-            <TextField fx:id="descriptionField" layoutX="23.0" layoutY="155.0" prefHeight="30.0" prefWidth="271.0" promptText="Description*">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-         </children></Pane>
       <Button fx:id="cancelButton" layoutX="182.0" layoutY="367.0" mnemonicParsing="false" onAction="#onCancelButtonClick" prefHeight="35.0" prefWidth="151.0" text="Cancel">
          <font>
             <Font size="16.0" />
@@ -41,23 +20,82 @@
             <Font size="16.0" />
          </font>
       </Button>
-      <Pane layoutX="14.0" layoutY="231.0" prefHeight="125.0" prefWidth="319.0" style="-fx-background-color: EAEAEA;">
+      <Pane layoutX="14.0" layoutY="231.0" prefHeight="130.0" prefWidth="319.0" style="-fx-background-color: EAEAEA;">
          <children>
             <Label layoutX="87.0" layoutY="1.0" text="Food properties">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="expirationDateField" layoutX="22.0" layoutY="78.0" prefHeight="30.0" prefWidth="271.0" promptText="Expiration date">
+            <TextField fx:id="expirationDateField" layoutX="22.0" layoutY="88.0" prefHeight="30.0" prefWidth="271.0" promptText="Expiration date">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="caloriesField" layoutX="22.0" layoutY="38.0" prefHeight="30.0" prefWidth="271.0" promptText="Calories">
+            <TextField fx:id="caloriesField" layoutX="22.0" layoutY="42.0" prefHeight="30.0" prefWidth="271.0" promptText="Calories">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
+            <Text fill="#737373" layoutX="37.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Calories">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <Text fill="#737373" layoutX="37.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expiration date">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane layoutX="14.0" layoutY="14.0" prefHeight="213.0" prefWidth="319.0" style="-fx-background-color: EAEAEA;">
+         <children>
+            <Label layoutX="69.0" layoutY="1.0" text="Common properties">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="idField" layoutX="22.0" layoutY="38.0" prefHeight="11.0" prefWidth="271.0" promptText="Id">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="nameField" layoutX="22.0" layoutY="81.0" prefHeight="20.0" prefWidth="271.0" promptText="Name">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="priceField" layoutX="22.0" layoutY="124.0" prefHeight="24.0" prefWidth="271.0" promptText="Price" text="0.00">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="descriptionField" layoutX="23.0" layoutY="167.0" prefHeight="24.0" prefWidth="271.0" promptText="Description*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Text fill="#737373" layoutX="33.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Id">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <Text fill="#737373" layoutX="33.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <Text fill="#737373" layoutX="36.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <Text fill="#737373" layoutX="36.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description*">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
    </children>

@@ -5,9 +5,7 @@ import com.example.demo.enums.ClothesType;
 import com.example.demo.enums.ElectronicsType;
 import com.example.demo.enums.Genre;
 import com.example.demo.enums.Material;
-import com.example.demo.factories.AbstractProductFactory;
-import com.example.demo.factories.FactoryManager;
-import com.example.demo.factories.ReviewFactory;
+import com.example.demo.factories.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -54,10 +52,9 @@ public class MainController implements Initializable {
     @FXML
     private TextArea reviewTextArea;
 
-    private Map<Class<?>, String> titles;
-    private Map<Class<?>, String> fxmlNames;
+//    private Map<Class<?>, String> titles;
+//    private Map<Class<?>, String> fxmlNames;
     static ObservableList<Product> items;
-    private FactoryManager factoryManager;
     private ObservableList<Review> reviews;
     private ReviewFactory reviewFactory;
 
@@ -81,10 +78,10 @@ public class MainController implements Initializable {
 
     private void initClassesComboBox() {
         ObservableList<ProductClass> classes = FXCollections.observableArrayList(
-                new ProductClass(Book.class, "Book"),
-                new ProductClass(Clothes.class, "Clothes"),
-                new ProductClass(Electronics.class, "Electronics"),
-                new ProductClass(Food.class, "Food")
+                new ProductClass(Book.class, "Book", "bookForm.fxml", "Book creation", new BookFactory()),
+                new ProductClass(Clothes.class, "Clothes", "clothesForm.fxml", "Clothes creation", new ClothesFactory()),
+                new ProductClass(Electronics.class, "Electronics", "electronicsForm.fxml", "Electronics creation", new ElectronicsFactory()),
+                new ProductClass(Food.class, "Food", "foodForm.fxml", "Food creation", new FoodFactory())
         );
         classesComboBox.setItems(classes);
         classesComboBox.setValue(classesComboBox.getItems().get(0));
@@ -133,20 +130,7 @@ public class MainController implements Initializable {
             }
         });
     }
-    private void initTitles() {
-        titles = new HashMap<>();
-        titles.put(Book.class, "Book creation");
-        titles.put(Clothes.class, "Clothes creation");
-        titles.put(Electronics.class, "Electronics creation");
-        titles.put(Food.class, "Food creation");
-    }
-    private void initFxmlNames() {
-        fxmlNames = new HashMap<>();
-        fxmlNames.put(Book.class, "bookForm.fxml");
-        fxmlNames.put(Clothes.class, "clothesForm.fxml");
-        fxmlNames.put(Electronics.class, "electronicsForm.fxml");
-        fxmlNames.put(Food.class, "foodForm.fxml");
-    }
+
     private void initReviewTableView() {
         productReviewColumn.setCellValueFactory(new PropertyValueFactory<>("productIdentifier"));
         ratingReviewColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
@@ -194,21 +178,18 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initClassesComboBox();
         initProductsTableView();
-        initTitles();
-        initFxmlNames();
         initReviewTableView();
         if (!items.isEmpty()) {
             addReviewButton.setDisable(false);
         }
-        factoryManager = new FactoryManager();
         reviewFactory = new ReviewFactory();
     }
 
     @FXML
     void onAddProductButtonClick() {
         Class<?> productClass = classesComboBox.getSelectionModel().getSelectedItem().getProductClass();
-        AbstractProductFactory productFactory = factoryManager.getProductFactory(productClass);
-        Product product = productFactory.create(fxmlNames.get(productClass), titles.get(productClass));
+        AbstractProductFactory productFactory = classesComboBox.getSelectionModel().getSelectedItem().getFactory();
+        Product product = productFactory.create(classesComboBox.getSelectionModel().getSelectedItem().getFxmlName(), classesComboBox.getSelectionModel().getSelectedItem().getTitle());
         if (product != null)
             items.add(product);
     }
@@ -216,8 +197,8 @@ public class MainController implements Initializable {
     @FXML
     void onEditProductButtonClick() {
         Class<?> productClass = productsTableView.getSelectionModel().getSelectedItem().getClass();
-        AbstractProductFactory productFactory = factoryManager.getProductFactory(productClass);
-        productFactory.edit(productsTableView.getSelectionModel().getSelectedItem(), fxmlNames.get(productClass), titles.get(productClass));
+        AbstractProductFactory productFactory = classesComboBox.getSelectionModel().getSelectedItem().getFactory();
+        productFactory.edit(productsTableView.getSelectionModel().getSelectedItem(), classesComboBox.getSelectionModel().getSelectedItem().getFxmlName(), classesComboBox.getSelectionModel().getSelectedItem().getTitle());
         productsTableView.refresh();
         reviewsTableView.refresh();
     }

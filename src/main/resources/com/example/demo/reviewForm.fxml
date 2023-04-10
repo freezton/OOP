@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="320.0" prefWidth="389.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controllers.ReviewController">
    <children>
@@ -24,7 +25,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextArea fx:id="commentField" layoutX="14.0" layoutY="91.0" prefHeight="157.0" prefWidth="332.0" promptText="Review comment" wrapText="true">
+            <TextArea fx:id="commentField" layoutX="14.0" layoutY="97.0" prefHeight="151.0" prefWidth="332.0" promptText="Review comment" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
@@ -39,6 +40,21 @@
                   <Font size="14.0" />
                </font>
             </Button>
+            <Text fill="#737373" layoutX="23.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <Text fill="#737373" layoutX="232.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Raiting">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <Text fill="#737373" layoutX="23.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comment">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
    </children>

@@ -27,9 +27,9 @@ public final class Validator {
 
     public static void showErrorWindow() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ошибка");
-        alert.setHeaderText("Некорректно введены данные");
-        alert.setContentText("Попробуйте еще раз");
+        alert.setTitle("Error");
+        alert.setHeaderText("Incorrect data");
+        alert.setContentText("Please, try one more time");
         alert.showAndWait();
     }
 

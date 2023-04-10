@@ -15,6 +15,7 @@ public class BookFactory implements AbstractProductFactory {
         Stage stage = new Stage();
         Object controller = ControllerManager.getController(formTitle, loader, stage);
         stage.showAndWait();
+        assert controller != null;
         return ((BookController)controller).getBook();
     }
 
@@ -23,6 +24,7 @@ public class BookFactory implements AbstractProductFactory {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcesRoot + fxmlFilename));
         Stage stage = new Stage();
         Object controller = ControllerManager.getController(formTitle, loader, stage);
+        assert controller != null;
         ((BookController)controller).setBookProperties((Book)book);
         stage.showAndWait();
     }
