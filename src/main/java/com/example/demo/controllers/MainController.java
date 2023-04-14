@@ -52,8 +52,6 @@ public class MainController implements Initializable {
     @FXML
     private TextArea reviewTextArea;
 
-//    private Map<Class<?>, String> titles;
-//    private Map<Class<?>, String> fxmlNames;
     static ObservableList<Product> items;
     private ObservableList<Review> reviews;
     private ReviewFactory reviewFactory;
