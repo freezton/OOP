@@ -12,6 +12,10 @@ public class Electronics extends Product {
         this.model = model;
     }
 
+    private Electronics() {
+
+    }
+
     public ElectronicsType getType() {
         return type;
     }

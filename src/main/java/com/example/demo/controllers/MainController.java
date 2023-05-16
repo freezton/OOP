@@ -6,6 +6,7 @@ import com.example.demo.enums.ElectronicsType;
 import com.example.demo.enums.Genre;
 import com.example.demo.enums.Material;
 import com.example.demo.factories.*;
+import com.example.demo.serializers.Serializer;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -13,7 +14,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -52,8 +58,10 @@ public class MainController implements Initializable {
     @FXML
     private TextArea reviewTextArea;
 
-    static ObservableList<Product> items;
-    private ObservableList<Review> reviews;
+    public static ObservableList<Product> items;
+    public static ObservableList<Review> reviews;
+
+    public static ObservableList<ProductClass> classes;
     private ReviewFactory reviewFactory;
 
     public static boolean isIdExists(int id) {
@@ -75,7 +83,7 @@ public class MainController implements Initializable {
     }
 
     private void initClassesComboBox() {
-        ObservableList<ProductClass> classes = FXCollections.observableArrayList(
+        classes = FXCollections.observableArrayList(
                 new ProductClass(Book.class, "Book", "bookForm.fxml", "Book creation", new BookFactory()),
                 new ProductClass(Clothes.class, "Clothes", "clothesForm.fxml", "Clothes creation", new ClothesFactory()),
                 new ProductClass(Electronics.class, "Electronics", "electronicsForm.fxml", "Electronics creation", new ElectronicsFactory()),
@@ -128,7 +136,6 @@ public class MainController implements Initializable {
             }
         });
     }
-
     private void initReviewTableView() {
         productReviewColumn.setCellValueFactory(new PropertyValueFactory<>("productIdentifier"));
         ratingReviewColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
@@ -172,6 +179,7 @@ public class MainController implements Initializable {
             }
         });
     }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initClassesComboBox();
@@ -236,8 +244,44 @@ public class MainController implements Initializable {
         reviewTextArea.setText(newValue.getProduct().getId() + ". " + newValue.getProduct().getName() + "\n" + "Rate: " + newValue.getRating() + "/5\n" +
                 newValue.getText());
     }
+
     @FXML
     void onDeleteReviewButtonClick() {
         reviews.remove(reviewsTableView.getSelectionModel().getSelectedItem());
+    }
+
+    @FXML
+    void onSaveFileClick() throws InstantiationException, IllegalAccessException {
+        if (items.isEmpty()) {
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save to file...");
+        SerializerFactory serializerFactory = new SerializerFactory();
+        serializerFactory.setFilters(fileChooser);
+        Stage currStage = (Stage)reviewTextArea.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(currStage);
+        if (file != null) {
+            String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
+            Serializer serializer = serializerFactory.getSerializerInfo(extension).getSerializer();
+            serializer.serialize(items, reviews, file.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    void onOpenFileClick() throws InstantiationException, IllegalAccessException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open file...");
+        SerializerFactory serializerFactory = new SerializerFactory();
+        serializerFactory.setFilters(fileChooser);
+        Stage currStage = (Stage)reviewTextArea.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(currStage);
+        if (file != null) {
+            if (file.length() != 0) {
+                String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
+                Serializer serializer = serializerFactory.getSerializerInfo(extension).getSerializer();
+                serializer.deserialize(items, reviews, file.getAbsolutePath());
+            }
+        }
     }
 }

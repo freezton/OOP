@@ -31,6 +31,10 @@ public class Clothes extends Product {
         this.type = type;
     }
 
+    private Clothes() {
+
+    }
+
     public int getSize() {
         return size;
     }

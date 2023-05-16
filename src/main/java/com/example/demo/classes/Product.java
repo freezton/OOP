@@ -1,6 +1,21 @@
 package com.example.demo.classes;
 
-abstract public class Product {
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import java.io.Serializable;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Book.class, name = "Book"),
+        @JsonSubTypes.Type(value = Food.class, name = "Food"),
+        @JsonSubTypes.Type(value = Electronics.class, name = "Electronics"),
+        @JsonSubTypes.Type(value = Clothes.class, name = "Clothes")
+})
+abstract public class Product implements Serializable {
     private int id;
     private String name;
     private double price;
@@ -11,6 +26,10 @@ abstract public class Product {
         this.name = name;
         this.price = price;
         this.description = description;
+    }
+
+    Product() {
+
     }
 
     @Override

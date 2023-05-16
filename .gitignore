@@ -4,6 +4,8 @@ target/
 !**/src/test/**/target/
 
 info.txt
+out.txt
+VERY_IMPORTANT_DATA!.txt
 diagram.uml
 temp/
 

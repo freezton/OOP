@@ -33,6 +33,14 @@ public final class Validator {
         alert.showAndWait();
     }
 
+    public static void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
     public static boolean isValidDouble(String inputString) {
         try {
             Double.parseDouble(inputString);

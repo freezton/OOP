@@ -10,6 +10,10 @@ public class Food extends Product {
         this.calories = calories;
     }
 
+    private Food() {
+
+    }
+
     public int getExpirationDate() {
         return expirationDate;
     }
