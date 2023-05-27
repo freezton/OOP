@@ -10,21 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SerializerFactory {
-    private Map<String, SerializerInfo> serializers = new HashMap<>();
+//    private Map<String, SerializerInfo> serializers = new HashMap<>();
+//
+//    public SerializerFactory() {
+//        serializers.put("txt", new SerializerInfo(TextSerializer.class, "Text document", "txt"));
+//        serializers.put("bin", new SerializerInfo(BinarySerializer.class, "Binary file", "bin"));
+//        serializers.put("json", new SerializerInfo(JsonSerializer.class, "JSON file", "json"));
+//    }
 
-    public SerializerFactory() {
-        serializers.put("txt", new SerializerInfo(TextSerializer.class, "Text document", "txt"));
-        serializers.put("bin", new SerializerInfo(BinarySerializer.class, "Binary file", "bin"));
-        serializers.put("json", new SerializerInfo(JsonSerializer.class, "JSON file", "json"));
-    }
-
-    public void setFilters(FileChooser fileChooser) {
-        for (String extension : serializers.keySet()) {
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(serializers.get(extension).toString(), "*." + extension));
-        }
-    }
-
-    public SerializerInfo getSerializerInfo(String extension) {
+    public SerializerInfo getSerializerInfo(String extension, Map<String, SerializerInfo> serializers) {
         return serializers.get(extension);
     }
 }

@@ -80,6 +80,13 @@
                   <MenuItem mnemonicParsing="false" onAction="#onSaveFileClick" text="Save" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Plugin">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onBase32SaveClick" text="Base32 Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#onBase64SaveClick" text="Base64 Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#onBaseOpenClick" text="Open" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </children>

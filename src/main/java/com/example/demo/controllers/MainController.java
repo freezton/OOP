@@ -6,7 +6,8 @@ import com.example.demo.enums.ElectronicsType;
 import com.example.demo.enums.Genre;
 import com.example.demo.enums.Material;
 import com.example.demo.factories.*;
-import com.example.demo.serializers.Serializer;
+import com.example.demo.serializers.*;
+import com.example.demo.utils.FileChooserManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,10 +18,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import org.example.baseencoder.*;
+import org.example.base32encoder.*;
+import org.example.base64encoder.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
 public class MainController implements Initializable {
@@ -63,6 +70,9 @@ public class MainController implements Initializable {
 
     public static ObservableList<ProductClass> classes;
     private ReviewFactory reviewFactory;
+    private Map<String, SerializerInfo> serializers = new HashMap<>();
+    private Map<String, BaseEncoder> encoders = new HashMap<>();
+    private File selectedFile;
 
     public static boolean isIdExists(int id) {
         for (Product product: items) {
@@ -179,16 +189,47 @@ public class MainController implements Initializable {
             }
         });
     }
+    private void initSerializers() {
+        serializers.put("txt", new SerializerInfo(TextSerializer.class, "Text document", "txt"));
+        serializers.put("bin", new SerializerInfo(BinarySerializer.class, "Binary file", "bin"));
+        serializers.put("json", new SerializerInfo(JsonSerializer.class, "JSON file", "json"));
+    }
+    private BaseEncoder getEncoder(File pluginFile, String classname) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+//        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { pluginFile.toURI().toURL() });
+        ClassLoader classLoader = MainController.class.getClassLoader();
+        Class<?> pluginClass = classLoader.loadClass(classname);
+        BaseEncoder encoder = (BaseEncoder) pluginClass.newInstance();
+        return encoder;
+    }
+    private void initEncoders() {
+        final String PREFIX = "org.example.";
+
+        File pluginsFolder = new File("src\\main\\java\\com\\example\\demo\\plugins\\jar");
+        File[] pluginFiles = pluginsFolder.listFiles((dir, name) -> name.endsWith(".jar"));
+        for (File file: pluginFiles) {
+            String className = file.getName().substring(0, file.getName().lastIndexOf('.'));
+            try {
+                System.out.println(PREFIX + className.toLowerCase() + "." + className);
+                BaseEncoder encoder = getEncoder(file, PREFIX + className.toLowerCase() + "." + className);
+                encoders.put(className, encoder);
+            } catch (Exception e) {
+                Validator.showAlert(Alert.AlertType.ERROR, "File Error", "There are no encoders in directory", "");
+                break;
+            }
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initClassesComboBox();
         initProductsTableView();
         initReviewTableView();
+        initSerializers();
         if (!items.isEmpty()) {
             addReviewButton.setDisable(false);
         }
         reviewFactory = new ReviewFactory();
+        initEncoders();
     }
 
     @FXML
@@ -250,38 +291,167 @@ public class MainController implements Initializable {
         reviews.remove(reviewsTableView.getSelectionModel().getSelectedItem());
     }
 
-    @FXML
-    void onSaveFileClick() throws InstantiationException, IllegalAccessException {
-        if (items.isEmpty()) {
-            return;
+    private void serialize() {
+        if (selectedFile != null) {
+            SerializerFactory serializerFactory = new SerializerFactory();
+            String extension = selectedFile.getName().substring(selectedFile.getName().lastIndexOf('.') + 1);
+            try {
+                Serializer serializer = serializerFactory.getSerializerInfo(extension, serializers).getSerializer();
+                serializer.serialize(items, reviews, selectedFile.getAbsolutePath());
+            } catch (Exception e) {
+                Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while serialization", "");
+            }
         }
+    }
+
+    private void deserialize() {
+        if (selectedFile != null) {
+            String extension = getExtension(selectedFile.getPath());
+            System.out.println("deserialize: " + extension);
+            if (checkIfIsEncoded(extension)) {
+                decodeAndDeserialize(extension);
+            } else {
+                SerializerFactory serializerFactory = new SerializerFactory();
+                extension = selectedFile.getName().substring(selectedFile.getName().lastIndexOf('.') + 1);
+                try {
+                    Serializer serializer = serializerFactory.getSerializerInfo(extension, serializers).getSerializer();
+                    serializer.deserialize(items, reviews, selectedFile.getAbsolutePath());
+                } catch (Exception e) {
+                    Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while serialization", "");
+                }
+            }
+        }
+    }
+
+//    private void deserializeFromString
+    private void showSaveFileChooserDialog(String title) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save to file...");
-        SerializerFactory serializerFactory = new SerializerFactory();
-        serializerFactory.setFilters(fileChooser);
+        fileChooser.setTitle(title);
+        FileChooserManager.setFilters(fileChooser, serializers);
         Stage currStage = (Stage)reviewTextArea.getScene().getWindow();
-        File file = fileChooser.showSaveDialog(currStage);
-        if (file != null) {
-            String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
-            Serializer serializer = serializerFactory.getSerializerInfo(extension).getSerializer();
-            serializer.serialize(items, reviews, file.getAbsolutePath());
+        selectedFile = fileChooser.showSaveDialog(currStage);
+    }
+
+    private void showOpenFileChooserDialog(String title, boolean isDecoding) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        if (isDecoding) {
+            FileChooserManager.setFiltersForEncoder(fileChooser, serializers);
+        }else {
+            FileChooserManager.setFilters(fileChooser, serializers);
+        }
+        Stage currStage = (Stage)reviewTextArea.getScene().getWindow();
+        selectedFile = fileChooser.showOpenDialog(currStage);
+    }
+
+    private String getExtension(String path) {
+        String[] parts = path.split("\\.");
+        return parts[parts.length - 1];
+    }
+
+    private void encode(String extension, String encoderName) {
+        if (selectedFile != null) {
+//            System.out.println(selectedFile.getName());
+            String newPath = selectedFile.getPath() + "." + extension;
+            long fileLength = selectedFile.length();
+            selectedFile.renameTo(new File(newPath));
+            byte[] byteArray = new byte[(int) fileLength];
+            try {
+                FileInputStream stream = new FileInputStream(newPath);
+                stream.read(byteArray, 0, byteArray.length);
+                stream.close();
+                byteArray = encoders.get(encoderName).encode(byteArray);
+                FileOutputStream newStream = new FileOutputStream(newPath);
+                newStream.write(byteArray);
+                newStream.close();
+            } catch (Exception e) {
+                Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while serialization", "");
+            }
+        }
+    }
+
+    private boolean checkIfIsEncoded(String ext) {
+        for (String key : encoders.keySet()) {
+            if (encoders.get(key).getExtension().equals(ext)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void decodeAndDeserialize(String pluginExtension) {
+        byte[] byteArray = new byte[(int) selectedFile.length()];
+        try {
+            FileInputStream fr = new FileInputStream(selectedFile.getPath());
+            fr.read(byteArray, 0, byteArray.length);
+            fr.close();
+            String pluginName = "";
+            for (String key : encoders.keySet()) {
+                if (encoders.get(key).getExtension().equals(pluginExtension)) {
+                    pluginName = encoders.get(key).getName();
+                    break;
+                }
+            }
+            byteArray = encoders.get(pluginName).decode(byteArray);
+            String extension = getExtension(selectedFile.getPath().substring(0, selectedFile.getPath().lastIndexOf(".")));
+
+            byteArray = encoders.get(pluginName).decode(byteArray);
+//            String text = new String(byteArray);
+            File tmpFile = new File(selectedFile.getName() + "." + extension);
+            FileOutputStream fw = new FileOutputStream(tmpFile);
+            fw.write(byteArray);
+            fw.close();
+            SerializerFactory serializerFactory = new SerializerFactory();
+            Serializer serializer = serializerFactory.getSerializerInfo(extension, serializers).getSerializer();
+//            System.out.println(serializer.);
+//            serializer.serialize(items, review  s, selectedFile.getAbsolutePath());
+            tmpFile.delete();
+        } catch (Exception e) {
+            Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while deserialization", "");
         }
     }
 
     @FXML
-    void onOpenFileClick() throws InstantiationException, IllegalAccessException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open file...");
-        SerializerFactory serializerFactory = new SerializerFactory();
-        serializerFactory.setFilters(fileChooser);
-        Stage currStage = (Stage)reviewTextArea.getScene().getWindow();
-        File file = fileChooser.showOpenDialog(currStage);
-        if (file != null) {
-            if (file.length() != 0) {
-                String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
-                Serializer serializer = serializerFactory.getSerializerInfo(extension).getSerializer();
-                serializer.deserialize(items, reviews, file.getAbsolutePath());
-            }
+    void onSaveFileClick() {
+        if (items.isEmpty()) {
+            return;
         }
+        showSaveFileChooserDialog("Save to file...");
+        serialize();
+    }
+
+    @FXML
+    void onOpenFileClick() {
+        showOpenFileChooserDialog("Open file...", false);
+        deserialize();
+    }
+
+    @FXML
+    void onBase32SaveClick() {
+        final String name = "Base32encoder";
+        if (items.isEmpty()) {
+            return;
+        }
+        showSaveFileChooserDialog("Save to file...");
+        System.out.println(encoders);
+        serialize();
+        encode(encoders.get(name).getExtension(), name);
+    }
+
+    @FXML
+    void onBase64SaveClick() {
+        final String name = "Base64encoder";
+        if (items.isEmpty()) {
+            return;
+        }
+        showSaveFileChooserDialog("Save to file...");
+        serialize();
+        encode(encoders.get(name).getExtension(), name);
+    }
+
+    @FXML
+    void onBaseOpenClick() {
+        showOpenFileChooserDialog("Open file...", true);
+        deserialize();
     }
 }

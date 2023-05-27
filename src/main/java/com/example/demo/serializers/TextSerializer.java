@@ -7,13 +7,13 @@ import com.example.demo.controllers.Validator;
 import com.example.demo.serializers.Serializer;
 import javafx.scene.control.Alert;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,6 +49,8 @@ public class TextSerializer implements Serializer {
                 for (Field field: fields) {
                     field.setAccessible(true);
                     String data = field.getName().equals("product") ? String.valueOf(review.getProduct().getId()) : field.get(review).toString();
+                    if (data.contains("\n"))
+                        data = data.replaceAll("\n", "\r");
                     writer.write("\t\t" + field.getName() + "=" + data + "\n");
                 }
             }
@@ -60,10 +62,14 @@ public class TextSerializer implements Serializer {
     @Override
     public void deserialize(List<Product> products, List<Review> reviews, String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String file = Files.readString(Path.of(path));
+            List<String> list = Arrays.asList(file.split("\n"));
             products.clear();
             reviews.clear();
-            String line = reader.readLine();
-            while (!(line = reader.readLine().trim()).equals("Reviews:")) {
+//            String line = reader.readLine();
+            int index = 1;
+            while (!(list.get(index).equals("Reviews:"))) {
+                String line = list.get(index).trim();
                 Class<? extends Product> productClass = (Class<? extends Product>)getClassByName(classes ,line.substring(0, line.length()-1));
                 assert productClass != null;
                 Constructor<?> constructor = productClass.getDeclaredConstructor();
@@ -73,15 +79,17 @@ public class TextSerializer implements Serializer {
                 List<Field> fields = new ArrayList<>();
                 getFields(fields, productClass);
                 for (Field field: fields) {
-                    line = reader.readLine().trim();
+                    line = list.get(++index).trim();
                     field.setAccessible(true);
                     setField(instance, field, line.substring(line.indexOf('=')+1));
                 }
                 products.add(productClass.cast(instance));
+                index++;
             }
 
-            while ((line = reader.readLine()) != null && !line.isBlank()) {
-                line = line.trim();
+            index++;
+            while ((index < list.size() && !list.get(index).isBlank())) {
+                String line = list.get(index).trim();
                 Class<Review> reviewClass = Review.class;
 
                 Constructor<?> constructor = reviewClass.getDeclaredConstructor();
@@ -91,16 +99,20 @@ public class TextSerializer implements Serializer {
                 List<Field> fields = new ArrayList<>();
                 getFields(fields, reviewClass);
                 for (Field field: fields) {
-                    line = reader.readLine().trim();
+                    line = list.get(++index).trim();
+                    if (line.contains("\r"))
+                        line = line.replaceAll("\r", "\n");
                     field.setAccessible(true);
                     if (line.substring(0, line.indexOf('=')).equals("product")) {
                         Product product = getProductById(products, Integer.parseInt(line.substring(line.indexOf('=')+1)));
                         setField(instance, field, product);
-                    } else {
+                    }
+                    else {
                         setField(instance, field, line.substring(line.indexOf('=') + 1));
                     }
                 }
                 reviews.add(reviewClass.cast(instance));
+                index++;
             }
         } catch (Exception e) {
             Validator.showAlert(Alert.AlertType.ERROR, "File error", "Error while text file serialization!", "Check file info");

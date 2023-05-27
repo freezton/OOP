@@ -53,7 +53,7 @@ public class Review implements Serializable {
     @Override
     public String toString() {
         return "Review:" +
-                "product=" + product.getId() + '\n' +
+//                "product=" + product.getId() + '\n' +
                 ", rating=" + rating + '\n' +
                 ", text='" + text + '\'' +
                 '}';
