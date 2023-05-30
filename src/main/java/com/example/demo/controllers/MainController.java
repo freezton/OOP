@@ -22,12 +22,12 @@ import org.example.baseencoder.*;
 import org.example.base32encoder.*;
 import org.example.base64encoder.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class MainController implements Initializable {
@@ -315,12 +315,20 @@ public class MainController implements Initializable {
                 extension = selectedFile.getName().substring(selectedFile.getName().lastIndexOf('.') + 1);
                 try {
                     Serializer serializer = serializerFactory.getSerializerInfo(extension, serializers).getSerializer();
-                    serializer.deserialize(items, reviews, selectedFile.getAbsolutePath());
+//                    String file = Files.readString(Path.of(selectedFile.getAbsolutePath()));
+                    byte[] file = Files.readAllBytes(Path.of(selectedFile.getAbsolutePath()));
+                    serializer.deserialize(items, reviews, file);
                 } catch (Exception e) {
-                    Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while serialization", "");
+                    Validator.showAlert(Alert.AlertType.ERROR, "File error", "Error while text file deserialization!", "Check file info");
                 }
             }
         }
+    }
+
+    @FXML
+    private void deleteAll() {
+        items.clear();
+        reviews.clear();
     }
 
 //    private void deserializeFromString
@@ -389,23 +397,27 @@ public class MainController implements Initializable {
             for (String key : encoders.keySet()) {
                 if (encoders.get(key).getExtension().equals(pluginExtension)) {
                     pluginName = encoders.get(key).getName();
+//                    pluginName = encoders.get(key).getName().substring(encoders.get(key).getName().lastIndexOf('.'));
                     break;
                 }
             }
-            byteArray = encoders.get(pluginName).decode(byteArray);
+            pluginName = pluginName.substring(pluginName.lastIndexOf('.')+1);
+            BaseEncoder encoder = encoders.get(pluginName);
+            byteArray = encoder.decode(byteArray);
             String extension = getExtension(selectedFile.getPath().substring(0, selectedFile.getPath().lastIndexOf(".")));
 
-            byteArray = encoders.get(pluginName).decode(byteArray);
+//            byteArray = encoders.get(pluginName).decode(byteArray);
 //            String text = new String(byteArray);
-            File tmpFile = new File(selectedFile.getName() + "." + extension);
-            FileOutputStream fw = new FileOutputStream(tmpFile);
-            fw.write(byteArray);
-            fw.close();
+//            File tmpFile = new File(selectedFile.getName() + "." + extension);
+//            FileOutputStream fw = new FileOutputStream(tmpFile);
+//            fw.write(byteArray);
+//            fw.close();
             SerializerFactory serializerFactory = new SerializerFactory();
             Serializer serializer = serializerFactory.getSerializerInfo(extension, serializers).getSerializer();
+            serializer.deserialize(items, reviews, byteArray);
 //            System.out.println(serializer.);
 //            serializer.serialize(items, review  s, selectedFile.getAbsolutePath());
-            tmpFile.delete();
+//            tmpFile.delete();
         } catch (Exception e) {
             Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while deserialization", "");
         }

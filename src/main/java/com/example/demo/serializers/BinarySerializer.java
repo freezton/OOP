@@ -23,8 +23,9 @@ public class BinarySerializer implements Serializer {
     }
 
     @Override
-    public void deserialize(List<Product> products, List<Review> reviews, String path) {
-        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path))) {
+    public void deserialize(List<Product> products, List<Review> reviews, byte[] data) {
+//        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path))) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(data))) {
             products.clear();
             reviews.clear();
             products.addAll((ArrayList<Product>)inputStream.readObject());

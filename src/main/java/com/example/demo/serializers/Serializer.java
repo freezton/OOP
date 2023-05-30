@@ -10,5 +10,5 @@ public interface Serializer {
 
     void serialize(List<Product> products, List<Review> reviews, String path);
 
-    void deserialize(List<Product> products, List<Review> reviews, String path);
+    void deserialize(List<Product> products, List<Review> reviews, byte[] data);
 }

@@ -39,12 +39,14 @@ public class JsonSerializer implements Serializer {
     }
 
     @Override
-    public void deserialize(List<Product> products, List<Review> reviews, String path) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+    public void deserialize(List<Product> products, List<Review> reviews, byte[] data) {
+        //(BufferedReader reader = new BufferedReader(new FileReader(path)))
+        try  {
+            String json = new String(data);
             products.clear();
             reviews.clear();
             ObjectMapper objectMapper = new ObjectMapper();
-            String json = reader.readLine();
+//            String json = reader.readLine();
             ProductListWrapper productListWrapper = objectMapper.readValue(json, ProductListWrapper.class);
             ReviewListWrapper reviewListWrapper = objectMapper.readValue(json.substring(json.indexOf("{\"reviews\"")), ReviewListWrapper.class);
             products.addAll(productListWrapper.getProducts());

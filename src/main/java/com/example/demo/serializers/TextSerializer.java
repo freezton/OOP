@@ -60,9 +60,11 @@ public class TextSerializer implements Serializer {
     }
 
     @Override
-    public void deserialize(List<Product> products, List<Review> reviews, String path) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-            String file = Files.readString(Path.of(path));
+    public void deserialize(List<Product> products, List<Review> reviews, byte[] data) {
+        //(BufferedReader reader = new BufferedReader(new FileReader(path)))
+        try  {
+//            String file = Files.readString(Path.of(path));
+            String file = new String(data);
             List<String> list = Arrays.asList(file.split("\n"));
             products.clear();
             reviews.clear();
@@ -115,7 +117,7 @@ public class TextSerializer implements Serializer {
                 index++;
             }
         } catch (Exception e) {
-            Validator.showAlert(Alert.AlertType.ERROR, "File error", "Error while text file serialization!", "Check file info");
+            Validator.showAlert(Alert.AlertType.ERROR, "File error", "Error while text file deserialization!", "Check file info");
         }
     }
 
