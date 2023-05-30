@@ -8,7 +8,7 @@ import java.util.List;
 public interface Serializer {
 
 
-    void serialize(List<Product> products, List<Review> reviews, String path);
+    byte[] serialize(List<Product> products, List<Review> reviews);
 
     void deserialize(List<Product> products, List<Review> reviews, byte[] data);
 }

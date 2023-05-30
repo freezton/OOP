@@ -13,12 +13,15 @@ import java.util.List;
 public class BinarySerializer implements Serializer {
 
     @Override
-    public void serialize(List<Product> products, List<Review> reviews, String path) {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
-            outputStream.writeObject(new ArrayList<>(products));
-            outputStream.writeObject(new ArrayList<>(reviews));
+    public byte[] serialize(List<Product> products, List<Review> reviews) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
+            objectOutputStream.writeObject(new ArrayList<>(products));
+            objectOutputStream.writeObject(new ArrayList<>(reviews));
+            return outputStream.toByteArray();
         } catch (IOException e) {
             Validator.showAlert(Alert.AlertType.ERROR, "File error", "Error while binary file serialization!", "Check file info");
+            return null;
         }
     }
 

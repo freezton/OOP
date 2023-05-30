@@ -26,15 +26,18 @@ public class JsonSerializer implements Serializer {
     }
 
     @Override
-    public void serialize(List<Product> products, List<Review> reviews, String path) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+    public byte[] serialize(List<Product> products, List<Review> reviews) {
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
             ProductListWrapper productListWrapper = new ProductListWrapper(products);
             ReviewListWrapper reviewListWrapper = new ReviewListWrapper(reviews);
-            writer.write(objectMapper.writeValueAsString(productListWrapper));
-            writer.write(objectMapper.writeValueAsString(reviewListWrapper));
+            String data = objectMapper.writeValueAsString(productListWrapper) + objectMapper.writeValueAsString(reviewListWrapper);
+            return data.getBytes();
+//            writer.write(objectMapper.writeValueAsString(productListWrapper));
+//            writer.write(objectMapper.writeValueAsString(reviewListWrapper));
         } catch (Exception e) {
             Validator.showAlert(Alert.AlertType.ERROR, "File error", "Error while JSON file serialization!", "Check file info");
+            return null;
         }
     }
 

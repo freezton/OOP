@@ -3,7 +3,7 @@ module com.example.demo {
     requires javafx.fxml;
 //    requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
-    requires org.apache.commons.codec;
+//    requires org.apache.commons.codec;
     requires BaseEncoder;
     requires Base32encoder;
     requires Base64encoder;

@@ -19,13 +19,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import org.example.baseencoder.*;
-import org.example.base32encoder.*;
-import org.example.base64encoder.*;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -194,7 +190,7 @@ public class MainController implements Initializable {
         serializers.put("bin", new SerializerInfo(BinarySerializer.class, "Binary file", "bin"));
         serializers.put("json", new SerializerInfo(JsonSerializer.class, "JSON file", "json"));
     }
-    private BaseEncoder getEncoder(File pluginFile, String classname) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    private BaseEncoder getEncoder(String classname) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 //        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { pluginFile.toURI().toURL() });
         ClassLoader classLoader = MainController.class.getClassLoader();
         Class<?> pluginClass = classLoader.loadClass(classname);
@@ -210,7 +206,7 @@ public class MainController implements Initializable {
             String className = file.getName().substring(0, file.getName().lastIndexOf('.'));
             try {
                 System.out.println(PREFIX + className.toLowerCase() + "." + className);
-                BaseEncoder encoder = getEncoder(file, PREFIX + className.toLowerCase() + "." + className);
+                BaseEncoder encoder = getEncoder(PREFIX + className.toLowerCase() + "." + className);
                 encoders.put(className, encoder);
             } catch (Exception e) {
                 Validator.showAlert(Alert.AlertType.ERROR, "File Error", "There are no encoders in directory", "");
@@ -291,17 +287,20 @@ public class MainController implements Initializable {
         reviews.remove(reviewsTableView.getSelectionModel().getSelectedItem());
     }
 
-    private void serialize() {
+    private byte[] serialize() {
         if (selectedFile != null) {
+            byte[] data;
             SerializerFactory serializerFactory = new SerializerFactory();
             String extension = selectedFile.getName().substring(selectedFile.getName().lastIndexOf('.') + 1);
             try {
                 Serializer serializer = serializerFactory.getSerializerInfo(extension, serializers).getSerializer();
-                serializer.serialize(items, reviews, selectedFile.getAbsolutePath());
+                data = serializer.serialize(items, reviews);
+                return data;
             } catch (Exception e) {
                 Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while serialization", "");
             }
         }
+        return null;
     }
 
     private void deserialize() {
@@ -357,17 +356,12 @@ public class MainController implements Initializable {
         return parts[parts.length - 1];
     }
 
-    private void encode(String extension, String encoderName) {
+    private void encode(String extension, String encoderName, byte[] byteArray) {
         if (selectedFile != null) {
 //            System.out.println(selectedFile.getName());
             String newPath = selectedFile.getPath() + "." + extension;
-            long fileLength = selectedFile.length();
             selectedFile.renameTo(new File(newPath));
-            byte[] byteArray = new byte[(int) fileLength];
             try {
-                FileInputStream stream = new FileInputStream(newPath);
-                stream.read(byteArray, 0, byteArray.length);
-                stream.close();
                 byteArray = encoders.get(encoderName).encode(byteArray);
                 FileOutputStream newStream = new FileOutputStream(newPath);
                 newStream.write(byteArray);
@@ -406,18 +400,9 @@ public class MainController implements Initializable {
             byteArray = encoder.decode(byteArray);
             String extension = getExtension(selectedFile.getPath().substring(0, selectedFile.getPath().lastIndexOf(".")));
 
-//            byteArray = encoders.get(pluginName).decode(byteArray);
-//            String text = new String(byteArray);
-//            File tmpFile = new File(selectedFile.getName() + "." + extension);
-//            FileOutputStream fw = new FileOutputStream(tmpFile);
-//            fw.write(byteArray);
-//            fw.close();
             SerializerFactory serializerFactory = new SerializerFactory();
             Serializer serializer = serializerFactory.getSerializerInfo(extension, serializers).getSerializer();
             serializer.deserialize(items, reviews, byteArray);
-//            System.out.println(serializer.);
-//            serializer.serialize(items, review  s, selectedFile.getAbsolutePath());
-//            tmpFile.delete();
         } catch (Exception e) {
             Validator.showAlert(Alert.AlertType.ERROR, "File Error", "Error while deserialization", "");
         }
@@ -446,8 +431,8 @@ public class MainController implements Initializable {
         }
         showSaveFileChooserDialog("Save to file...");
         System.out.println(encoders);
-        serialize();
-        encode(encoders.get(name).getExtension(), name);
+        byte[] data = serialize();
+        encode(encoders.get(name).getExtension(), name, data);
     }
 
     @FXML
@@ -457,8 +442,8 @@ public class MainController implements Initializable {
             return;
         }
         showSaveFileChooserDialog("Save to file...");
-        serialize();
-        encode(encoders.get(name).getExtension(), name);
+        byte[] data = serialize();
+        encode(encoders.get(name).getExtension(), name, data);
     }
 
     @FXML

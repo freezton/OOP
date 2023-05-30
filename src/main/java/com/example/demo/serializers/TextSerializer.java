@@ -29,33 +29,36 @@ public class TextSerializer implements Serializer {
     }
 
     @Override
-    public void serialize(List<Product> products, List<Review> reviews, String path) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            writer.write("Products:\n");
+    public byte[] serialize(List<Product> products, List<Review> reviews) {
+        try  {
+            StringBuilder result = new StringBuilder();
+            result.append("Products:\n");
             for (Product product: products) {
                 List<Field> fields = new ArrayList<>();
-                writer.write("\t" + product.getClass().getSimpleName() + ":\n");
+                result.append("\t" + product.getClass().getSimpleName() + ":\n");
                 getFields(fields, product.getClass());
                 for (Field field: fields) {
                     field.setAccessible(true);
-                    writer.write("\t\t" + field.getName() + "=" + field.get(product) + "\n");
+                    result.append("\t\t" + field.getName() + "=" + field.get(product) + "\n");
                 }
             }
-            writer.write("Reviews:\n");
+            result.append("Reviews:\n");
             for (Review review: reviews) {
                 List<Field> fields = new ArrayList<>();
-                writer.write("\t" + review.getClass().getSimpleName() + ":\n");
+                result.append("\t" + review.getClass().getSimpleName() + ":\n");
                 getFields(fields, review.getClass());
                 for (Field field: fields) {
                     field.setAccessible(true);
                     String data = field.getName().equals("product") ? String.valueOf(review.getProduct().getId()) : field.get(review).toString();
                     if (data.contains("\n"))
                         data = data.replaceAll("\n", "\r");
-                    writer.write("\t\t" + field.getName() + "=" + data + "\n");
+                    result.append("\t\t" + field.getName() + "=" + data + "\n");
                 }
             }
+            return result.toString().getBytes();
         } catch (Exception e) {
             Validator.showAlert(Alert.AlertType.ERROR, "File error", "Error while text file serialization!", "Check file info");
+            return null;
         }
     }
 
